@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base Reset ──────────────────────────────────────────────────────────────*/
+*, *::before, *::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html {
+  /* Prevent font scaling on orientation change */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  /* Prevent overscroll bounce on iOS/Android */
+  overscroll-behavior: none;
+  /* Prevent text selection on drag */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection inside inputs and textareas */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* ── Safe Area (notch / gesture bar) ────────────────────────────────────────*/
+#root {
+  /* Pad bottom for Android gesture navigation bar */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pb-safe {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+}
+
+.bottom-nav {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
+}
+
+/* ── App Shell ───────────────────────────────────────────────────────────────*/
+.app-shell {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100dvh;           /* dvh = dynamic viewport height (handles Android Chrome bar) */
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar hidden (mobile-style) ────────────────────────────────────────*/
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Sheet / Bottom Modal ────────────────────────────────────────────────────*/
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  animation: fadeIn .2s ease-out;
+}
+
+.sheet-content {
+  width: 100%;
+  border-radius: 22px 22px 0 0;
+  max-height: 90dvh;
+  overflow-y: auto;
+  animation: slideUp .28s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── Planner drag cursor ─────────────────────────────────────────────────────*/
+.dragging   { cursor: grabbing !important; }
+.drag-event { cursor: grab; }
+
+/* ── Tap feedback (replace :hover on mobile) ─────────────────────────────────*/
+.tap-highlight:active {
+  opacity: 0.7;
+  transform: scale(0.97);
+  transition: transform .1s, opacity .1s;
+}
+
+/* ── Animations ──────────────────────────────────────────────────────────────*/
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes confetti {
+  0%   { transform: scale(1) rotate(0deg); }
+  40%  { transform: scale(1.35) rotate(12deg); }
+  70%  { transform: scale(0.95) rotate(-6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .45; }
+}
+
+@keyframes streakBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+/* ── Utility classes ─────────────────────────────────────────────────────────*/
+.animate-fade-up   { animation: fadeUp .25s ease-out; }
+.animate-scale-in  { animation: scaleIn .2s cubic-bezier(.34,1.56,.64,1); }
+.animate-confetti  { animation: confetti .55s ease-out; }
+.animate-pulse-glow{ animation: pulseGlow 2s ease-in-out infinite; }
+.animate-streak    { animation: streakBounce .4s ease-in-out; }
+
+/* ── Range input styling ─────────────────────────────────────────────────────*/
+input[type='range'] {
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 99px;
+  outline: none;
+  cursor: pointer;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #A78BFA;
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(167,139,250,.25);
+}
+
+/* ── Time input ──────────────────────────────────────────────────────────────*/
+input[type='time']::-webkit-calendar-picker-indicator {
+  filter: invert(0.6);
+  cursor: pointer;
+}
+
+/* ── Responsive: very small phones (< 360px) ─────────────────────────────────*/
+@media (max-width: 359px) {
+  .app-shell { font-size: 14px; }
+  .bottom-nav-label { display: none; }
+}
+
+/* ── Responsive: tablet / large phone ────────────────────────────────────────*/
+@media (min-width: 431px) {
+  .app-shell {
+    border-left:  1px solid rgba(255,255,255,.06);
+    border-right: 1px solid rgba(255,255,255,.06);
+    box-shadow: 0 0 60px rgba(0,0,0,.3);
+  }
+}
+
+/* ── Additional Responsive Fixes ─────────────────────────────────────────────*/
+
+/* Dynamic viewport height — handles Android Chrome address bar */
+.min-h-screen { min-height: 100dvh; }
+
+/* Prevent horizontal overflow on all screens */
+.app-shell > * { max-width: 100%; overflow-x: hidden; }
+
+/* Timeline scrollbar hidden on all platforms */
+.timeline-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Bottom nav safe area — handles gesture navigation bar */
+nav.bottom-nav {
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+/* Font size floor for very small screens */
+@media (max-width: 359px) {
+  html { font-size: 13px; }
+  .bottom-nav-label { font-size: 9px !important; }
+}
+
+/* Fix time input on Android */
+input[type='time'] {
+  -webkit-appearance: none;
+  appearance: none;
+}
