@@ -1,0 +1,22 @@
+{
+    "short_name": "Upday",
+    "name": "Upday - Task & Habit Tracker",
+    "icons": [
+      {
+        "src": "/icons/icon-192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/icons/icon-192.png",
+        "type": "image/png",
+        "sizes": "512x512",
+        "purpose": "any maskable"
+      }
+    ],
+    "start_url": "/",
+    "background_color": "#0F0E17",
+    "theme_color": "#7C6FCD",
+    "display": "standalone",
+    "orientation": "portrait"
+  }
