@@ -7,13 +7,14 @@ import type { Habit } from '@/types/database'
 import type { NewHabitInput } from '@/stores/habitStore'
 
 interface AddHabitModalProps {
-  C:       AppTheme
-  initial: Habit | null
-  onClose: () => void
-  onSave:  (data: NewHabitInput) => void
+  C:        AppTheme
+  initial:  Habit | null
+  onClose:  () => void
+  onSave:   (data: NewHabitInput) => void
+  onDelete?: () => void // 🛠️ Menambahkan opsi prop onDelete
 }
 
-export function AddHabitModal({ C, initial, onClose, onSave }: AddHabitModalProps) {
+export function AddHabitModal({ C, initial, onClose, onSave, onDelete }: AddHabitModalProps) {
   const [form, setForm] = useState<NewHabitInput>({
     title:  initial?.title  ?? '',
     icon:   initial?.icon   ?? '🎯',
@@ -21,6 +22,7 @@ export function AddHabitModal({ C, initial, onClose, onSave }: AddHabitModalProp
     time:   initial?.time   ?? '07:00',
     pinned: initial?.pinned ?? false,
   })
+  
   const set = <K extends keyof NewHabitInput>(k: K, v: NewHabitInput[K]) =>
     setForm(f => ({ ...f, [k]: v }))
 
@@ -106,12 +108,32 @@ export function AddHabitModal({ C, initial, onClose, onSave }: AddHabitModalProp
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, paddingBottom: 8 }}>
+      {/* ── Action Buttons ── */}
+      {/* Menggunakan grid template dinamis: 3 kolom jika ada onDelete (mode edit), 2 kolom jika tidak ada */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: onDelete ? '1fr 1fr 1fr' : '1fr 1fr', 
+        gap: 10, 
+        paddingBottom: 8 
+      }}>
+        
+        {/* Tombol Hapus: Hanya muncul jika prop onDelete dikirimkan (saat edit) */}
+        {onDelete && (
+          <button onClick={onDelete} style={{
+            padding: '13px', borderRadius: 12, 
+            background: '#ff4d4d', color: C.white, border: 'none',
+            fontWeight: 700, fontSize: 14, cursor: 'pointer',
+          }}>
+            Hapus 🗑️
+          </button>
+        )}
+
         <button onClick={onClose} style={{
           padding: '13px', borderRadius: 12, background: 'transparent',
           color: C.muted, border: `1px solid ${C.border}`,
           fontWeight: 700, fontSize: 14, cursor: 'pointer',
         }}>Batal</button>
+        
         <button onClick={save} style={{
           padding: '13px', borderRadius: 12, background: C.primary,
           color: C.white, border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer',
