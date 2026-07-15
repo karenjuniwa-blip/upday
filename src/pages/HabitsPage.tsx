@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { useThemeStore }  from '@/stores/themeStore'
 import { useAuthStore }   from '@/stores/authStore'
 import { useHabitStore }  from '@/stores/habitStore'
@@ -22,13 +22,9 @@ export function HabitsPage() {
  const [detailHabit,setDetailHabit]= useState<Habit | null>(null)
  const [doneHabit,  setDoneHabit]  = useState<Habit | null>(null)
 
- // State untuk navigasi bulan pada riwayat kalender konsistensi
- const [currentCalendarDate, setCurrentCalendarDate] = useState(() => new Date())
-
  const today    = todayISO()
  const doneCount = habits.filter(h => h.logs.find(l => l.log_date === today)?.done).length
 
- // 🛠️ PERBAIKAN NO 2: Reset state modal secara otomatis setelah proses save sukses
  async function handleSave(data: NewHabitInput) {
    if (!user) return
    if (editHabit) {
@@ -40,7 +36,6 @@ export function HabitsPage() {
    setEditHabit(null)
  }
 
- // Fungsi hapus langsung yang akan di-passing ke AddHabitModal saat mode edit
  async function handleDelete(id: string) {
    if (confirm("Apakah kamu yakin ingin menghapus habit ini?")) {
      await deleteHabit(id)
@@ -58,37 +53,6 @@ export function HabitsPage() {
    if (!user) return
    await markUndone(id, user.id)
  }
-
- // 🛠️ PERBAIKAN NO 1 & FITUR BULANAN: Optimasi kalkulasi grid data kalender menggunakan useMemo
- const calendarData = useMemo(() => {
-   const year = currentCalendarDate.getFullYear()
-   const month = currentCalendarDate.getMonth()
-   
-   // Dapatkan jumlah hari dalam bulan terpilih
-   const daysInMonth = new Date(year, month + 1, 0).getDate()
-   const totalHabits = habits.length
-
-   return Array.from({ length: daysInMonth }, (_, i) => {
-     const dayNum = i + 1
-     // Format date string menjadi YYYY-MM-DD local time
-     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`
-     
-     const done = habits.filter(h => h.logs.find(l => l.log_date === dateStr)?.done).length
-     const ratio = totalHabits ? done / totalHabits : 0
-     
-     // Penentuan warna background berdasarkan rasio keberhasilan habit
-     const bg = ratio > .7 ? C.primary : ratio > .3 ? `${C.primary}66` : C.isDark ? C.card : C.border
-
-     return { dayNum, bg, dateStr }
-   })
- }, [currentCalendarDate, habits, C])
-
- // Fungsi navigasi bulan
- const changeMonth = (direction: number) => {
-   setCurrentCalendarDate(prev => new Date(prev.getFullYear(), prev.getMonth() + direction, 1))
- }
-
- const monthName = currentCalendarDate.toLocaleString('id-ID', { month: 'long', year: 'numeric' })
 
  if (loading) return <Spinner C={C} />
 
@@ -108,49 +72,6 @@ export function HabitsPage() {
      </div>
      <div style={{ fontSize: 13, color: C.muted, marginBottom: 20 }}>
        {doneCount}/{habits.length} selesai hari ini
-     </div>
-
-     {/* ── Kalender Konsistensi Bulanan (Full Month) ── */}
-     <div style={{
-       background: C.surface, borderRadius: 14, padding: 14,
-       border: `1px solid ${C.border}`, marginBottom: 20, boxShadow: C.shadow,
-     }}>
-       {/* Navigasi Riwayat Bulan */}
-       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-         <div style={{ fontSize: 12, fontWeight: 700, color: C.muted }}>
-           Konsistensi: <span style={{ color: C.text }}>{monthName}</span>
-         </div>
-         <div style={{ display: 'flex', gap: 8 }}>
-           <button onClick={() => changeMonth(-1)} style={{ background: 'transparent', border: 'none', color: C.accent, cursor: 'pointer', fontSize: 12, fontWeight: 'bold' }}>◀</button>
-           <button onClick={() => changeMonth(1)} style={{ background: 'transparent', border: 'none', color: C.accent, cursor: 'pointer', fontSize: 12, fontWeight: 'bold' }}>▶</button>
-         </div>
-       </div>
-
-       {/* Grid Kalender Sebulan Penuh */}
-       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6 }}>
-         {calendarData.map((day) => (
-           <div 
-             key={day.dateStr} 
-             title={`${day.dateStr}`}
-             style={{ 
-               aspectRatio: '1', 
-               borderRadius: 6, 
-               background: day.bg, 
-               transition: 'background .3s',
-               display: 'flex',
-               alignItems: 'center',
-               justifyContent: 'center',
-               fontSize: 10,
-               fontWeight: 600,
-               color: C.isDark ? '#fff' : '#000',
-               opacity: 0.9,
-               border: day.dateStr === today ? `2px solid ${C.accent}` : 'none'
-             }}
-           >
-             {day.dayNum}
-           </div>
-         ))}
-       </div>
      </div>
 
      {/* ── Habit list ── */}
@@ -252,7 +173,7 @@ export function HabitsPage() {
          initial={editHabit}
          onClose={() => { setShowAdd(false); setEditHabit(null) }}
          onSave={handleSave}
-         onDelete={editHabit ? () => handleDelete(editHabit.id) : undefined} // 🛠️ Diteruskan ke modal jika modenya edit
+         onDelete={editHabit ? () => handleDelete(editHabit.id) : undefined}
        />
      )}
      {detailHabit && (
