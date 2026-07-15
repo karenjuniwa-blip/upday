@@ -1,35 +1,45 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+ <head>
+   <meta charset="UTF-8" />
+   {/* 🛠️ DISKEMBANGKAN: Ditambahkan interactive-widget=resizes-content agar PWA kebal dari gangguan keyboard HP */}
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
 
-    <!-- PWA Meta -->
-    <meta name="theme-color"         content="#7C6FCD" />
-    <meta name="mobile-web-app-capable"          content="yes" />
-    <meta name="apple-mobile-web-app-capable"    content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title"      content="Upday" />
+   <!-- PWA Meta -->
+   <meta name="theme-color"         content="#7C6FCD" />
+   <meta name="mobile-web-app-capable"          content="yes" />
+   <meta name="apple-mobile-web-app-capable"    content="yes" />
+   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+   <meta name="apple-mobile-web-app-title"      content="Upday" />
 
-    <!-- SEO -->
-    <meta name="description" content="Upday — All-in-one daily habit, task & schedule planner" />
-    <meta name="keywords"    content="habit tracker, task manager, daily planner, produktivitas" />
+   <!-- SEO -->
+   <meta name="description" content="Upday — All-in-one daily habit, task & schedule planner" />
+   <meta name="keywords"    content="habit tracker, task manager, daily planner, produktivitas" />
 
-    <!-- Open Graph -->
-    <meta property="og:title"       content="Upday" />
-    <meta property="og:description" content="All-in-one daily productivity app" />
-    <meta property="og:type"        content="website" />
+   <!-- Open Graph -->
+   <meta property="og:title"       content="Upday" />
+   <meta property="og:description" content="All-in-one daily productivity app" />
+   <meta property="og:type"        content="website" />
 
-    <!-- Icons -->
-    <link rel="icon"             type="image/png" href="/icons/icon-192.png" />
-    <link rel="apple-touch-icon"                  href="/icons/icon-192.png" />
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#7C6FCD" />
+   <!-- Icons -->
+   <link rel="icon"             type="image/png" href="/icons/icon-192.png" />
+   <link rel="apple-touch-icon"                  href="/icons/icon-192.png" />
+   <link rel="manifest" href="/manifest.json" />
 
-    <title>Upday</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+   <title>Upday</title>
+   
+   {/* 🛠️ TAMBAHKAN STYLING GLOBAL KHUSUS AGAR SELESAI MASALAH GULIRAN DI MOBILE */}
+   <style>
+     html, body, #root {
+       height: 100%;
+       margin: 0;
+       padding: 0;
+       overflow: hidden;
+     }
+   </style>
+ </head>
+ <body>
+   <div id="root"></div>
+   <script type="module" src="/src/main.tsx"></script>
+ </body>
 </html>

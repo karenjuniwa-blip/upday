@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react' // 🛠️ TAMBAHKAN: useEffect
+import { useState, useEffect, useMemo } from 'react' // 🛠️ TAMBAHKAN: useEffect
 import { useThemeStore }   from '@/stores/themeStore'
 import { useAuthStore }    from '@/stores/authStore'
 import { useTaskStore }    from '@/stores/taskStore'
